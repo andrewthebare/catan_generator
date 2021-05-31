@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 export default function Hex(props){
-  const [hexID] = useState(props.hexID)
+  const [hexID] = useState(props.hexID);
+  const [diceNum, setDiceNum] = useState(props.diceNum);
   const [hexScale, setHexScale] = useState(70);
   
   const width = 320;
@@ -37,7 +38,12 @@ export default function Hex(props){
     for (let i = 0; i< 5; i++){
       drawLine(c,hexCoordinate(center,i),hexCoordinate(center,i+1))
     }
-    drawLine(c,hexCoordinate(center,5),hexCoordinate(center,0))
+    drawLine(c,hexCoordinate(center,5),hexCoordinate(center,0));
+  
+    let ctx = c.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, 30, 0, 2 * Math.PI);
+    ctx.stroke();
   }
   
   useEffect(() => {
@@ -50,12 +56,16 @@ export default function Hex(props){
       <canvas id={hexID} className={classes.canvasHex}>
       
       </canvas>
+      <div className={classes.numDisplay}>
+        <h1>{Math.floor(Math.random() * 12)}</h1>
+      </div>
     </div>
   );
 }
 
 const useStyles = makeStyles({
   holder:{
+    position:"relative",
     width:130,
     height:150,
     
@@ -69,5 +79,16 @@ const useStyles = makeStyles({
     width: props => props.width,
     height: props => props.height,
     backgroundColor:"transparent",
+    
+    display:"flex",
+    justifyContent:"center",
+    alignItems:"center",
   },
+  
+  numDisplay:{
+    position:"absolute",
+    top:'35%',
+    left:'42%',
+    zIndex:1,
+  }
 })
