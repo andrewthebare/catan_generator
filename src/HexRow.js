@@ -10,7 +10,7 @@ export default function HexRow(props){
     
     for (let i = 0; i < props.hexNum; i++){
       result.push(
-        <Hex hexID={'hex'+i+props.hexIndex}/>
+        <Hex hexID={'hex'+i+props.hexIndex} diceNum={Math.floor(Math.random() * 12+1)}/>
       )
     }
     

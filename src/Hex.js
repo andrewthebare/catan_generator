@@ -6,9 +6,10 @@ export default function Hex(props){
   const [hexID] = useState(props.hexID);
   const [diceNum, setDiceNum] = useState(props.diceNum);
   const [hexScale, setHexScale] = useState(70);
-  
+  const [numColor, setNumColor] = useState('#000000');
   const width = 320;
   const height =160;
+  
   
   const point = (x,y)=>{
     return {x:x,y:y};
@@ -34,7 +35,7 @@ export default function Hex(props){
   const drawHex = ()=>{
     let c = document.getElementById(hexID);
     let center = point(c.width/2,c.height/2);
-    console.log('Center: ', center);
+    // console.log('Center: ', center);
     for (let i = 0; i< 5; i++){
       drawLine(c,hexCoordinate(center,i),hexCoordinate(center,i+1))
     }
@@ -46,18 +47,28 @@ export default function Hex(props){
     ctx.stroke();
   }
   
+  
+  
+  const numberFixer = ()=>{
+    // setDiceNum(Math.floor(Math.random() * 12+1));
+    if (diceNum === 6 || diceNum === 8){
+      setNumColor('#ec2222');
+      console.log('Number should be Red');
+    }
+  }
   useEffect(() => {
     drawHex();
+    numberFixer();
   }, []);
   
-  const classes = useStyles({width,height});
+  const classes = useStyles({width,height,numColor});
   return(
     <div className={classes.holder}>
       <canvas id={hexID} className={classes.canvasHex}>
       
       </canvas>
       <div className={classes.numDisplay}>
-        <h1>{Math.floor(Math.random() * 12)}</h1>
+        <h1 className={classes.num}>{diceNum}</h1>
       </div>
     </div>
   );
@@ -79,16 +90,21 @@ const useStyles = makeStyles({
     width: props => props.width,
     height: props => props.height,
     backgroundColor:"transparent",
-    
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center",
   },
   
   numDisplay:{
+    color:props => props.numColor,
     position:"absolute",
-    top:'35%',
-    left:'42%',
+    top:'0%',
+    left:'0%',
+    right:'0%',
+    bottom:'0%',
+    display:"flex",
+    justifyContent:"center",
+    alignItems:"center",
     zIndex:1,
+  },
+  num:{
+    verticalAlign:"middle",
   }
 })
