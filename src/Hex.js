@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default function Hex(props){
   const [hexID] = useState(props.hexID);
-  const [diceNum, setDiceNum] = useState(props.diceNum);
+  const [diceNum, setDiceNum] = useState(props.hexData.number);
   const [hexScale, setHexScale] = useState(70);
   const [numColor, setNumColor] = useState('#000000');
   const width = 320;
@@ -50,10 +50,10 @@ export default function Hex(props){
   
   
   const numberFixer = ()=>{
-    // setDiceNum(Math.floor(Math.random() * 12+1));
+    console.log('Hex data recieved:',props.hexData);
     if (diceNum === 6 || diceNum === 8){
       setNumColor('#ec2222');
-      console.log('Number should be Red');
+      // console.log('Number should be Red');
     }
   }
   useEffect(() => {
