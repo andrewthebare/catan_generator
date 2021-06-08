@@ -22,12 +22,28 @@ function App() {
     console.log('New Board: ', board);
   }
 
+  const boardReturn = ()=>{
+    let toReturn=[];
+
+    if (visible){
+      toReturn.push(
+          <Board board={board}/>
+      )
+    }else{
+      toReturn.push(
+          <div>
+            <h3>LOADING</h3>
+          </div>
+      )
+    }
+
+    return toReturn;
+  }
+
   const classes = useStyles({visible});
   return (
     <div className="App">
-      <div className={classes.board}>
-        <Board board={board}/>
-      </div>
+      {boardReturn()}
       <Button onClick={()=>generateBoard()}>Generate!</Button>
     </div>
   );
