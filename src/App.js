@@ -18,7 +18,7 @@ function App() {
       noRed:true,
     };
     setBoard(new BoardMaker(boardRules));
-    setVisible(true);
+    setVisible(!visible);
     console.log('New Board: ', board);
   }
 
@@ -39,7 +39,12 @@ function App() {
 
     return toReturn;
   }
-
+  
+  // useEffect(() => {
+  //   setVisible(false);
+  // }, []);
+  
+  
   const classes = useStyles({visible});
   return (
     <div className="App">
@@ -77,9 +82,15 @@ class BoardMaker{
         // index = Math.floor(Math.random() * resourceTypeList.length);
         // board[i].type=resourceTypeList.splice(index, 1)[0];
         
+        let number = numberList.splice(Math.floor(Math.random() * numberList.length), 1)[0];
+        let type = number === 1 ? resourceTypeList.pop() : resourceTypeList.splice(Math.floor(Math.random() * resourceTypeList.length), 1)[0]
+        
+        if (number === 1)
+          console.log('This hex is desert')
+        
         let hexData = {
-          number:numberList.splice(Math.floor(Math.random() * numberList.length), 1)[0],
-          type:resourceTypeList.splice(Math.floor(Math.random() * resourceTypeList.length), 1)[0],
+          number:number,
+          type:type,
           neighbors: neighbors[i],
         };
         board[i]=hexData;
