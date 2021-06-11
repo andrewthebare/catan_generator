@@ -1,5 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import woodHex from '../src/images/wood.jpg'
+import clayHex from '../src/images/clay.jpg'
+import sheepHex from '../src/images/sheep.jpg'
+import wheatHex from '../src/images/wheat.jpg'
+import oreHex from '../src/images/ore.jpg'
 
 
 export default function Hex(props){
@@ -40,27 +45,35 @@ export default function Hex(props){
     let ctx = c.getContext('2d');
     let start = hexCoordinate(center,0);
   
+    let bg = new Image();
+  
     let color = '#00000000'
     switch (props.hexData.type){
       case 0:
+        bg.src = woodHex;
         color = '#559c55'
         break;
       case 1:
+        bg.src = clayHex;
         color ='#cb4b10'
         break;
       case 2:
+        bg.src = sheepHex;
         color ='#9dfc4c'
         break;
       case 3:
+        bg.src = wheatHex;
         color ='#e5dd25'
         break;
       case 4:
+        bg.src = oreHex;
         color ='#464fa4'
         break;
       case 5:
         color ='#eee7bd'
         break;
     }
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(start.x, start.y);
     
@@ -69,15 +82,24 @@ export default function Hex(props){
     }
     ctx.lineTo(start.x, start.y);
     ctx.fillStyle = color;
-    ctx.fill()
-    
-    if(diceNum !==1){
-      ctx.beginPath();
-      ctx.arc(center.x, center.y, 30, 0, 2 * Math.PI);
-      ctx.fillStyle='#f5e4b8'
-      ctx.fill()
-      ctx.stroke();
-    }
+  
+    bg.onload = function(){
+      let pattern = ctx.createPattern(this, "repeat");
+      ctx.fillStyle = pattern;
+      ctx.fill();
+  
+      if(diceNum !==1){
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, 25, 0, 2 * Math.PI);
+        ctx.fillStyle='#f5e4b8'
+        ctx.fill()
+        ctx.stroke();
+      }
+  
+    };
+    ctx.fill();
+  
+  
   }
   
   
