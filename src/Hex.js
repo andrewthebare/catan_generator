@@ -71,19 +71,24 @@ export default function Hex(props){
     ctx.fillStyle = color;
     ctx.fill()
     
-    ctx.beginPath();
-    ctx.arc(center.x, center.y, 30, 0, 2 * Math.PI);
-    ctx.fillStyle='#f5e4b8'
-    ctx.fill()
-    ctx.stroke();
+    if(diceNum !==1){
+      ctx.beginPath();
+      ctx.arc(center.x, center.y, 30, 0, 2 * Math.PI);
+      ctx.fillStyle='#f5e4b8'
+      ctx.fill()
+      ctx.stroke();
+    }
   }
   
   
   
   const numberFixer = ()=>{
     // console.log('Hex data recieved:',props.hexData);
-    if (diceNum === 6 || diceNum === 8){
+    if (diceNum === 6 || diceNum === 8) {
       setNumColor('#ec2222');
+    }
+    else if(diceNum ===1){
+      setDiceNum('')
     }
   }
   useEffect(() => {
