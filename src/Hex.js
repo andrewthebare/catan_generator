@@ -10,6 +10,8 @@ export default function Hex(props){
   const width = 320;
   const height =160;
   
+  const[hexColor, setHexColor] = useState('#00000000');
+  
   
   const point = (x,y)=>{
     return {x:x,y:y};
@@ -35,33 +37,61 @@ export default function Hex(props){
   const drawHex = ()=>{
     let c = document.getElementById(hexID);
     let center = point(c.width/2,c.height/2);
-    // console.log('Center: ', center);
-    for (let i = 0; i< 5; i++){
-      drawLine(c,hexCoordinate(center,i),hexCoordinate(center,i+1))
-    }
-    drawLine(c,hexCoordinate(center,5),hexCoordinate(center,0));
-  
     let ctx = c.getContext('2d');
+    let start = hexCoordinate(center,0);
+  
+    let color = '#00000000'
+    switch (props.hexData.type){
+      case 0:
+        color = '#559c55'
+        break;
+      case 1:
+        color ='#cb4b10'
+        break;
+      case 2:
+        color ='#9dfc4c'
+        break;
+      case 3:
+        color ='#e5dd25'
+        break;
+      case 4:
+        color ='#464fa4'
+        break;
+      case 5:
+        color ='#eee7bd'
+        break;
+    }
+    ctx.beginPath();
+    ctx.moveTo(start.x, start.y);
+    
+      for (let i = 0; i< 5; i++){
+      ctx.lineTo(hexCoordinate(center,i+1).x, hexCoordinate(center,i+1).y);
+    }
+    ctx.lineTo(start.x, start.y);
+    ctx.fillStyle = color;
+    ctx.fill()
+    
     ctx.beginPath();
     ctx.arc(center.x, center.y, 30, 0, 2 * Math.PI);
+    ctx.fillStyle='#f5e4b8'
+    ctx.fill()
     ctx.stroke();
   }
   
   
   
   const numberFixer = ()=>{
-    console.log('Hex data recieved:',props.hexData);
+    // console.log('Hex data recieved:',props.hexData);
     if (diceNum === 6 || diceNum === 8){
       setNumColor('#ec2222');
-      // console.log('Number should be Red');
     }
   }
   useEffect(() => {
-    drawHex();
     numberFixer();
+    drawHex();
   }, []);
   
-  const classes = useStyles({width,height,numColor});
+  const classes = useStyles({width,height,numColor, hexColor});
   return(
     <div className={classes.holder}>
       <canvas id={hexID} className={classes.canvasHex}>
@@ -89,7 +119,7 @@ const useStyles = makeStyles({
   canvasHex:{
     width: props => props.width,
     height: props => props.height,
-    backgroundColor:"transparent",
+    // backgroundColor:props => props.hexColor,
   },
   
   numDisplay:{

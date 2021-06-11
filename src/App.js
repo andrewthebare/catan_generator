@@ -94,7 +94,7 @@ class BoardMaker{
             type:resourceTypeList.popRandom()[0],
           }
           spots = spots.filter(function (e){
-            console.log(e, 'pos: '+ pos);
+            // console.log(e, 'pos: '+ pos);
             return e!==pos
           })
           console.log(spots);
@@ -108,7 +108,7 @@ class BoardMaker{
         }
         
         //fill in the rest randomly
-        console.log('board reds', board);
+        // console.log('board reds', board);
         for(let i = 0; i < spots.length;){
           let num=spots.popRandom()[0];
           board[num]={
@@ -116,7 +116,7 @@ class BoardMaker{
             number:numberList.popRandom()[0],
             type:resourceTypeList.pop(),
           }
-          console.log('info',board[num]);
+          // console.log('info',board[num]);
         }
       }
       
