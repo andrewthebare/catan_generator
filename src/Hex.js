@@ -73,7 +73,6 @@ export default function Hex(props){
         color ='#eee7bd'
         break;
     }
-    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(start.x, start.y);
     
@@ -81,6 +80,9 @@ export default function Hex(props){
       ctx.lineTo(hexCoordinate(center,i+1).x, hexCoordinate(center,i+1).y);
     }
     ctx.lineTo(start.x, start.y);
+    ctx.closePath();
+    ctx.lineWidth = 2;
+    ctx.stroke();
     ctx.fillStyle = color;
   
     bg.onload = function(){
