@@ -4,6 +4,13 @@ import './App.css';
 import Board from "./Board";
 import {Button} from "@material-ui/core";
 
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 function App() {
   
@@ -47,16 +54,62 @@ function App() {
   
   const classes = useStyles({visible});
   return (
-    <div className="App">
+    <div className={classes.app}>
+      <SidebarRules onClick={()=>generateBoard()}/>
       {boardReturn()}
-      <Button onClick={()=>generateBoard()}>Generate!</Button>
+      {/*<Button onClick={()=>generateBoard()}>Generate!</Button>*/}
+    </div>
+  );
+}
+
+export function SidebarRules(props){
+  
+  
+  const classes = useStyles();
+  return(
+    <div className={classes.rulesHolder}>
+      {/*<h2 className={classes.ruleTitle}>Rules</h2>*/}
+      <FormControl>
+        <h2 className={classes.ruleTitle}>Game Rules</h2>
+          <RadioGroup>
+            <h4>Game Size</h4>
+            <FormControlLabel value="female" control={<Radio />} label="Standard (2-4 players)" />
+            <FormControlLabel value="male" control={<Radio />} label="Extended (5-6 Players)" />
+          </RadioGroup>
+        <h4>Generator Rules</h4>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox/>}
+            label="Allow Red Neighbors"
+          />
+        </FormGroup>
+      </FormControl>
+      <Button onClick={()=> props.onClick()}>Generate!</Button>
     </div>
   );
 }
 
 const useStyles = makeStyles({
+  app:{
+    display:"flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
   board:{
     visibility : props => props.visible,
+    flex:3,
+  },
+  rulesHolder:{
+    minWidth:'20%',
+    display: "flex",
+    flexDirection: "column",
+    border: '3px solid black',
+    
+    textAlign:"center"
+  },
+  ruleTitle:{
+    textAlign:"center",
+    backgroundColor:'#cc4444'
   }
 })
 
