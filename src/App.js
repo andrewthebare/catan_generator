@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import './App.css';
 import Board from "./Board";
 import {Button} from "@material-ui/core";
 
@@ -10,6 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import HeaderBar from "./HeaderBar";
 
 function App() {
   
@@ -53,11 +53,13 @@ function App() {
   
   const classes = useStyles({visible});
   return (
-    <div className={classes.app}>
-      <br/>
+    <div>
+      <HeaderBar/>
+      <div className={classes.app}>
       <SidebarRules onClick={()=>generateBoard()}/>
       {boardReturn()}
       <Button onClick={()=>generateBoard()}>Generate!</Button>
+      </div>
     </div>
   );
 }
