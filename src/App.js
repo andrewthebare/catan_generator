@@ -21,8 +21,8 @@ function App() {
     //logic to accompany
     //pull down UI props
     let boardRules={
-      defaultSize:true,
-      noRed:true,
+      defaultSize: document.getElementById('standardGame').checked,
+      noRed: !document.getElementById('redNeighbors').checked,
     };
     setBoard(new BoardMaker(boardRules));
     setVisible(!visible);
@@ -57,13 +57,18 @@ function App() {
     <div className={classes.app}>
       <SidebarRules onClick={()=>generateBoard()}/>
       {boardReturn()}
-      {/*<Button onClick={()=>generateBoard()}>Generate!</Button>*/}
+      <Button onClick={()=>generateBoard()}>Generate!</Button>
     </div>
   );
 }
 
 export function SidebarRules(props){
+  const [value, setValue] = React.useState('standard');
   
+  const handleChange = (event) => {
+    setValue(event.target.value);
+    
+  };
   
   const classes = useStyles();
   return(
@@ -71,15 +76,15 @@ export function SidebarRules(props){
       {/*<h2 className={classes.ruleTitle}>Rules</h2>*/}
       <FormControl>
         <h2 className={classes.ruleTitle}>Game Rules</h2>
-          <RadioGroup>
+          <RadioGroup value={value} onChange={handleChange}>
             <h4>Game Size</h4>
-            <FormControlLabel value="female" control={<Radio />} label="Standard (2-4 players)" />
-            <FormControlLabel value="male" control={<Radio />} label="Extended (5-6 Players)" />
+            <FormControlLabel value="standard" control={<Radio id={'standardGame'} name={'standardGame'}/>}  label="Standard (2-4 players)" />
+            <FormControlLabel value="extended" control={<Radio />} label="Extended (5-6 Players)" />
           </RadioGroup>
         <h4>Generator Rules</h4>
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox/>}
+            control={<Checkbox id={'redNeighbors'}/>}
             label="Allow Red Neighbors"
           />
         </FormGroup>
