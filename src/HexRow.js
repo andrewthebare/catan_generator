@@ -11,13 +11,20 @@ export default function HexRow(props){
     console.log('Row Data: ', props.hexData);
 
     let local = 0;
-    if (props.indexLessHalf){
-      local = 0;
+    let startIndex = 0;
+    let endIndex = 5;
+    if (props.half === -1){
+      startIndex=5;
+      endIndex = 9;
+    }else if( props.half === 0){
+      startIndex=5;
+      endIndex=8;
     }else{
-      local = 2;
+      startIndex = 4;
+      endIndex = 8;
     }
 
-    result.push(<SeaEdge seaID={'sea' + props.hexIndex} location={local}/>)
+    result.push(<SeaEdge seaID={'sea' + props.hexIndex} startIndex={startIndex} endIndex={endIndex}/>)
 
     for (let i = 0; i < props.hexNum; i++){
       result.push(
@@ -25,13 +32,18 @@ export default function HexRow(props){
       )
     }
 
-    if (props.indexLessHalf){
-      local = 1;
+    if (props.half === -1){
+      startIndex=1;
+      endIndex = 5;
+    }else if( props.half === 0){
+      startIndex=2;
+      endIndex=5;
     }else{
-      local = 3;
+      startIndex = 2;
+      endIndex = 6;
     }
 
-    result.push(<SeaEdge seaID={'seaEnd' + props.hexIndex} location={local}/>)
+    result.push(<SeaEdge seaID={'seaEnd' + props.hexIndex} startIndex={startIndex} endIndex={endIndex}/>)
     
     return result;
   }
@@ -46,15 +58,31 @@ export default function HexRow(props){
 
 export function SeaRow(props){
 
+  const makeRow = () =>{
+    if (props.top){
+      return(
+          <div className={styles.rowHolder}>
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 1} startIndex={props.startIndex} endIndex={props.endIndex-1} />
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 2} startIndex={props.startIndex} endIndex={props.endIndex} />
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 3} startIndex={props.startIndex} endIndex={props.endIndex} />
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 4} startIndex={props.startIndex+1} endIndex={props.endIndex} />
+          </div>
+      )
+    }else{
+      return(
+          <div className={styles.rowHolder}>
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 1} startIndex={props.startIndex+1} endIndex={props.endIndex} />
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 2} startIndex={props.startIndex} endIndex={props.endIndex} />
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 3} startIndex={props.startIndex} endIndex={props.endIndex} />
+            <SeaEdge seaID={'seaEnd' + props.hexIndex + 4} startIndex={props.startIndex} endIndex={props.endIndex-1} />
+          </div>
+      )
+
+    }
+  }
+
   const styles= useStyles({...props.hexStyle});
-  return(
-      <div className={styles.rowHolder}>
-        <SeaEdge seaID={'seaEnd' + props.hexIndex + 1} location={props.location}/>
-        <SeaEdge seaID={'seaEnd' + props.hexIndex + 2} location={props.location}/>
-        <SeaEdge seaID={'seaEnd' + props.hexIndex + 3} location={props.location}/>
-        <SeaEdge seaID={'seaEnd' + props.hexIndex + 4} location={props.location}/>
-      </div>
-  )
+  return makeRow()
 }
 
 const useStyles = makeStyles({

@@ -67,13 +67,13 @@ export default function Board(props){
     
     return(
       <div>
-        <SeaRow hexIndex={-1} location={5}/>
-        <HexRow hexNum={3} hexIndex={0} hexData={rows[0]} indexLessHalf={true} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} indexLessHalf={true} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} indexLessHalf={true} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={4} hexIndex={12} hexData={rows[3]} indexLessHalf={false} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={3} hexIndex={16} hexData={rows[4]} indexLessHalf={false} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <SeaRow hexIndex={-2} location={4} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <SeaRow hexIndex={-1} startIndex={0} endIndex={4} top={true}/>
+        <HexRow hexNum={3} hexIndex={0} hexData={rows[0]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} half={0} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={12} hexData={rows[3]} half={1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={3} hexIndex={16} hexData={rows[4]} half={1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <SeaRow hexIndex={-2} startIndex={3} endIndex={7} top={false} hexStyle={{marginTop:-40,zIndex:-1}}/>
       </div>
     )
   }

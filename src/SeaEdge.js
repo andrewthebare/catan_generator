@@ -30,42 +30,44 @@ export default function SeaEdge(props){
         let center = point(c.width / 2, c.height / 2);
         let ctx = c.getContext('2d');
 
-        let startingIndex = 0;
+        let startingIndex = props.startIndex;
+        let endIndex = props.endIndex;
 
-        switch (props.location){
-            case 0:
-                startingIndex=5
-                break;
-            case 1:
-                startingIndex = 1;
-                break;
-            case 2:
-                startingIndex=4
-                break;
-            case 3:
-                startingIndex = 2;
-                break;
-            case 4:
-                startingIndex = 3;
-                break;
-        }
+        // switch (props.location){
+        //     case 0:
+        //         startingIndex=5
+        //         break;
+        //     case 1:
+        //         startingIndex = 1;
+        //         break;
+        //     case 2:
+        //         startingIndex=4
+        //         break;
+        //     case 3:
+        //         startingIndex = 2;
+        //         break;
+        //     case 4:
+        //         startingIndex = 3;
+        //         break;
+        // }
 
         let start = hexCoordinate(center, startingIndex);
 
-        let bg = new Image();
-
         let color = '#1fc4ec'
+
         ctx.beginPath();
         ctx.moveTo(start.x, start.y);
+        // ctx.strokeStyle(color)
 
-        for (let i = startingIndex; i < startingIndex+4; i++) {
+        for (let i = startingIndex; i < endIndex; i++) {
             ctx.lineTo(hexCoordinate(center, i + 1).x, hexCoordinate(center, i + 1).y);
         }
         ctx.lineTo(start.x, start.y);
         ctx.closePath();
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 0;
         ctx.stroke();
         ctx.fillStyle = color;
+        ctx.fill();
     }
 
     useEffect(()=>{
