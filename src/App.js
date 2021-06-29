@@ -10,15 +10,17 @@ function App() {
   
   const [board, setBoard] = useState(null)
   const [visible, setVisible] = useState(false);
+
+  let boardRules={
+    defaultSize:false,
+    noRed:true,
+    resourceShareReds:false,
+  };
   
   const generateBoard = ()=>{
     //logic to accompany
     //pull down UI props
-    let boardRules={
-      defaultSize:false,
-      noRed:true,
-      resourceShareReds:false,
-    };
+
     setBoard(new BoardMaker(boardRules));
     setVisible(!visible);
     console.log('New Board: ', board);
@@ -29,7 +31,7 @@ function App() {
 
     if (visible){
       toReturn.push(
-          <Board board={board}/>
+          <Board board={board} standardSize={boardRules.defaultSize}/>
       )
     }else{
       toReturn.push(

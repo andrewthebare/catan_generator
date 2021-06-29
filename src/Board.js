@@ -95,7 +95,7 @@ export default function Board(props){
     )
   }
 
-  return makeExtended();
+  return props.standardSize ? makeStandard() : makeExtended();
   
 }
 
