@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import $ from 'jquery'
 import { makeStyles } from '@material-ui/core/styles';
-import HexRow from "./HexRow";
+import HexRow, {SeaRow} from "./HexRow";
+import SeaEdge from "./SeaEdge";
 
 export default function Board(props){
   
@@ -66,11 +67,13 @@ export default function Board(props){
     
     return(
       <div>
-        <HexRow hexNum={3} hexIndex={0} hexData={rows[0]}/>
-        <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={4} hexIndex={12} hexData={rows[3]} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={3} hexIndex={16} hexData={rows[4]} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <SeaRow hexIndex={-1} location={5}/>
+        <HexRow hexNum={3} hexIndex={0} hexData={rows[0]} indexLessHalf={true} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} indexLessHalf={true} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} indexLessHalf={true} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={12} hexData={rows[3]} indexLessHalf={false} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={3} hexIndex={16} hexData={rows[4]} indexLessHalf={false} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <SeaRow hexIndex={-2} location={4} hexStyle={{marginTop:-40,zIndex:-1}}/>
       </div>
     )
   }
@@ -78,3 +81,4 @@ export default function Board(props){
   return makeStandard();
   
 }
+
