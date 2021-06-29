@@ -16,8 +16,8 @@ function App() {
     //pull down UI props
     let boardRules={
       defaultSize:false,
-      noRed:false,
-      resourceShareReds:true,
+      noRed:true,
+      resourceShareReds:false,
     };
     setBoard(new BoardMaker(boardRules));
     setVisible(!visible);
@@ -133,7 +133,7 @@ class BoardMaker{
       let reds = [6,6,8,8,6,8];
       let oneResource=[0,1,2,3,4]
       let resourceTypeList=[0,0,0,0,0,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4];
-      let neighbors=[[1,3,4],[0,4,5,2],[1,5,6],[0,4,7,8],[0,1,3,5,8,9],[1,2,4,6,9,10],[2,5,10,11],[3,8,12],[3,4,7,9,12,13],[4,5,8,10,13,14],[5,6,9,11,14,15],[6,10,15],[7,8,13,16],[8,9,12,14,16,17],[9,10,13,15,17,18],[10,11,14,18],[12,13,17],[16,13,14,18],[14,15,17]];
+      let neighbors=[[1,3,4],[0,4,5,2],[1,5,6],[0,4,7,8],[0,1,3,5,8,9],[1,2,4,6,9,10],[2,5,10,11],[3,8,12,13],[3,4,7,9,13,14],[4,5,8,10,14,15],[5,6,9,11,15,16],[6,10,16,17],[7,13,18],[7,8,12,14,18,19],[8,9,13,15,19,20],[9,10,14,16,20,21],[10,11,15,17,21,22],[11,16,22],[12,13,19,23],[13,14,18,20,23,24],[14,15,19,21,24,25],[15,16,20,22,25,26],[16,17,21,26],[18,19,24,27],[19,20,23,25,27,28],[20,21,24,26,28,29],[21,22,25,29],[23,24,28],[24,25,27,29],[25,26,28]];
       let board={};
 
       //if no reds on same resources
@@ -146,7 +146,7 @@ class BoardMaker{
       //randomly assign
       if (BoardRules.noRed){
         let possible = spots;
-        for(let i = 0; i < 4; i++){
+        for(let i = 0; i < 6; i++){
           let pos = possible.popRandom()[0];
           board[pos] = {
             id:pos,
