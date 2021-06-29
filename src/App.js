@@ -16,6 +16,7 @@ function App() {
     let boardRules={
       defaultSize:true,
       noRed:true,
+      resourceShareReds:false,
     };
     setBoard(new BoardMaker(boardRules));
     setVisible(!visible);
@@ -73,9 +74,17 @@ class BoardMaker{
       let spots = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
       let numberList = [2,3,3,4,4,5,5,9,9,10,10,11,11,12,1];
       let reds = [6,6,8,8];
-      let resourceTypeList=[0,0,0,0,1,1,1,2,2,2,2,3,3,3,3,4,4,4];
+      let oneResource=[0,1,2,3,4]
+      let resourceTypeList=[0,0,0,1,1,2,2,2,3,3,3,4,4];
       let neighbors=[[1,3,4],[0,4,5,2],[1,5,6],[0,4,7,8],[0,1,3,5,8,9],[1,2,4,6,9,10],[2,5,10,11],[3,8,12],[3,4,7,9,12,13],[4,5,8,10,13,14],[5,6,9,11,14,15],[6,10,15],[7,8,13,16],[8,9,12,14,16,17],[9,10,13,15,17,18],[10,11,14,18],[12,13,17],[16,13,14,18],[14,15,17]];
       let board={};
+
+      //if no reds on same resources
+      if (BoardRules.resourceShareReds){
+        resourceTypeList.push(...oneResource);
+        console.log('resourceTypeList',resourceTypeList)
+      }
+
       //randomly assign
       if (BoardRules.noRed){
         let possible = spots;
@@ -84,7 +93,7 @@ class BoardMaker{
           board[pos] = {
             id:pos,
             number:reds[i],
-            type:resourceTypeList.popRandom()[0],
+            type:BoardRules.resourceShareReds? resourceTypeList.popRandom()[0] : oneResource.popRandom()[0],
           }
           spots = spots.filter(function (e){
             return e!==pos
@@ -94,7 +103,12 @@ class BoardMaker{
           })
           
         }
-        
+
+        //pop one randomly from the oneresource to give back to normal resources
+        if (!BoardRules.resourceShareReds){
+          resourceTypeList.push(oneResource.popRandom()[0]);
+        }
+
         //fill in the rest randomly
         // console.log('board reds', board);
         for(let i = 0; i < spots.length;){
@@ -103,7 +117,7 @@ class BoardMaker{
           board[num]={
             id:num,
             number:number,
-            type:number ===1 ? 5:resourceTypeList.popRandom()[0],
+            type:number ===1 ? 5: number ===6 || number ===8? BoardRules.resourceShareReds? resourceTypeList.popRandom()[0] : oneResource.popRandom()[0] : resourceTypeList.popRandom()[0],
           }
           // console.log('info',board[num]);
         }
