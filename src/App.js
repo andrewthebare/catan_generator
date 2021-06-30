@@ -4,6 +4,7 @@ import './App.css';
 import Board from "./Board";
 import {Button} from "@material-ui/core";
 import {red} from "@material-ui/core/colors";
+import HeaderBar from "./HeaderBar";
 
 
 function App() {
@@ -51,14 +52,29 @@ function App() {
   
   const classes = useStyles({visible});
   return (
-    <div className="App">
+    <div className={classes.base}>
+      <HeaderBar/>
+      <Button className={classes.button} onClick={()=>generateBoard()}>Generate!</Button>
       {boardReturn()}
-      <Button onClick={()=>generateBoard()}>Generate!</Button>
     </div>
   );
 }
 
 const useStyles = makeStyles({
+  base:{
+    background: 'radial-gradient(circle, #303030 25%,#252525 75% )',
+    alignItems: "center",
+  },
+
+  button:{
+    backgroundColor: '#ff3c3c',
+    position: "relative",
+    left: "40%",
+    right: "40%",
+    width: '20%',
+    alignSelf: "center"
+  },
+
   board:{
     visibility : props => props.visible,
   }
