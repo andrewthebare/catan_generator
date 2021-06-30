@@ -64,6 +64,7 @@ const useStyles = makeStyles({
   base:{
     background: 'radial-gradient(circle, #303030 25%,#252525 75% )',
     alignItems: "center",
+    minHeight: window.innerHeight,
   },
 
   button:{
@@ -161,7 +162,7 @@ class BoardMaker{
         oneResource.push(resourceTypeList.popRandom()[0])
       }
 
-      //randomly assign
+      //place the reds first
       if (BoardRules.noRed){
         let possible = spots;
         for(let i = 0; i < 6; i++){
@@ -185,7 +186,6 @@ class BoardMaker{
 
         //fill in the rest randomly
         // console.log('board reds', board);
-        console.log('Here')
         for(let i = 0; i < spots.length;){
           let num=spots.popRandom()[0];
           let number = numberList.popRandom()[0];
@@ -194,10 +194,7 @@ class BoardMaker{
             number:number,
             type:number ===1 ? 5: number ===6 || number ===8? BoardRules.resourceShareReds? resourceTypeList.popRandom()[0] : oneResource.popRandom()[0] : resourceTypeList.popRandom()[0],
           }
-          console.log('info',board[num]);
         }
-
-
       return board;
 
     }
