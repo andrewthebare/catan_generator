@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import $ from 'jquery'
 import { makeStyles } from '@material-ui/core/styles';
 import HexRow from "./HexRow";
+import transitions from "@material-ui/core/styles/transitions";
 
 export default function Board(props){
   
@@ -65,7 +66,7 @@ export default function Board(props){
     let rows = makeRows(19);
     
     return(
-      <div>
+      <div className={classes.boardHolder}>
         <HexRow hexNum={3} hexIndex={0} hexData={rows[0]}/>
         <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} hexStyle={{marginTop:-40,zIndex:-1}}/>
         <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} hexStyle={{marginTop:-40,zIndex:-1}}/>
@@ -75,6 +76,15 @@ export default function Board(props){
     )
   }
   
+  
+  const classes = useStyles();
+  
   return makeStandard();
   
 }
+
+const useStyles=makeStyles({
+  boardHolder:{
+    transform: 'scale(.5)'
+  }
+})
