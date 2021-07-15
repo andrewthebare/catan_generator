@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import $ from 'jquery'
 import { makeStyles } from '@material-ui/core/styles';
-import HexRow from "./HexRow";
+
 import transitions from "@material-ui/core/styles/transitions";
+import HexRow, {SeaRow} from "./HexRow";
+import SeaEdge from "./SeaEdge";
 
 export default function Board(props){
   
@@ -67,14 +69,35 @@ export default function Board(props){
     
     return(
       <div className={classes.boardHolder}>
-        <HexRow hexNum={3} hexIndex={0} hexData={rows[0]}/>
-        <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={4} hexIndex={12} hexData={rows[3]} hexStyle={{marginTop:-40,zIndex:-1}}/>
-        <HexRow hexNum={3} hexIndex={16} hexData={rows[4]} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <SeaRow hexIndex={-1} startIndex={0} endIndex={4} top={true}/>
+        <HexRow hexNum={3} hexIndex={0} hexData={rows[0]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} half={0} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={12} hexData={rows[3]} half={1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={3} hexIndex={16} hexData={rows[4]} half={1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <SeaRow hexIndex={-2} startIndex={3} endIndex={7} top={false} hexStyle={{marginTop:-40,zIndex:-1}}/>
       </div>
     )
   }
+  const makeExtended = ()=>{
+    let rows = makeRows(30);
+
+    return(
+      <div>
+        <SeaRow hexIndex={-1} startIndex={0} endIndex={4} top={true}/>
+        <HexRow hexNum={3} hexIndex={0} hexData={rows[0]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={5} hexIndex={7} hexData={rows[2]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={6} hexIndex={12} hexData={rows[3]} half={0} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={5} hexIndex={18} hexData={rows[4]} half={1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={4} hexIndex={23} hexData={rows[5]} half={1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <HexRow hexNum={3} hexIndex={27} hexData={rows[6]} half={1} hexStyle={{marginTop:-40,zIndex:-1}}/>
+        <SeaRow hexIndex={-2} startIndex={3} endIndex={7} top={false} hexStyle={{marginTop:-40,zIndex:-1}}/>
+      </div>
+    )
+  }
+
+  return props.standardSize ? makeStandard() : makeExtended();
   
   
   const classes = useStyles();
@@ -89,3 +112,6 @@ const useStyles=makeStyles({
     padding: '2em',
   }
 })
+
+
+
