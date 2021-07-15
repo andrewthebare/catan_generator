@@ -85,6 +85,7 @@ export default function Board(props){
 
 const useStyles=makeStyles({
   boardHolder:{
-    transform: 'scale(.5)'
+    transform: window.innerWidth < 800? 'scale(.5)' : 'scale(1)',
+    padding: '2em',
   }
 })
