@@ -18,10 +18,10 @@ const useStyles = makeStyles({
         justifyContent: "space-around",
         alignItems: "center",
 
-        position: "relative",
+        position: "absolute",
         left: '0%',
         right: '0%',
-        height: '100px',
+        height: '80px',
         backgroundColor: "#fcfcfcfc",
     },
 })

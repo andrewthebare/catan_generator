@@ -37,36 +37,18 @@ export default function Board(props){
       index++;
     }
   
-  
-    // let i=0;
-    // let rowLength = 3;
-    // while(Object.keys(board).length > 0&& i< 5) {
-    //   let oneRow = {};
-    //   for (let j = 0; j<rowLength; j++){
-    //     $.extend(oneRow, board[j]);
-    //     // oneRow.push(board[j]);
-    //     delete board[j];
-    //   }
-    //   rows[i] = oneRow;
-    //
-    //   i++;
-    //   if (Object.keys(board).length >hexnum/2) {
-    //     rowLength++;
-    //   }else{
-    //     rowLength--;
-    //   }
-    // }
-  
+    
     console.log('Rows:', rows);
     return rows;
   
   }
   
+  const styles = useStyles(props.standardSize);
   const makeStandard = ()=>{
     let rows = makeRows(19);
     
     return(
-      <div>
+      <div className={styles.base}>
         <SeaRow hexIndex={-1} startIndex={0} endIndex={4} top={true}/>
         <HexRow hexNum={3} hexIndex={0} hexData={rows[0]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
         <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
@@ -81,7 +63,7 @@ export default function Board(props){
     let rows = makeRows(30);
 
     return(
-      <div>
+      <div className={styles.base}>
         <SeaRow hexIndex={-1} startIndex={0} endIndex={4} top={true}/>
         <HexRow hexNum={3} hexIndex={0} hexData={rows[0]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
         <HexRow hexNum={4} hexIndex={3} hexData={rows[1]} half={-1} hexStyle={{marginTop:-40,zIndex:-1}}/>
@@ -98,4 +80,12 @@ export default function Board(props){
   return props.standardSize ? makeStandard() : makeExtended();
   
 }
+
+const useStyles = makeStyles({
+  base:{
+    marginTop: window.innerWidth > 800? '65px': 0,
+    transform: window.innerWidth < 800? props=> props.standardSize? "scale(.5)" : 'scale(.43)' : 'scale(1)',
+    padding: window.innerWidth > 800?'2em' : 0,
+  }
+})
 

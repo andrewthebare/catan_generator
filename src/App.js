@@ -3,8 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 import Board from "./Board";
 import {Button} from "@material-ui/core";
-import {red} from "@material-ui/core/colors";
 import HeaderBar from "./HeaderBar";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 
 function App() {
@@ -12,17 +17,31 @@ function App() {
   const [board, setBoard] = useState(null)
   const [visible, setVisible] = useState(false);
 
-  let boardRules={
-    defaultSize:false,
-    noRed:true,
+  // let boardRules={
+  //   defaultSize: true,
+  //   noRed: true,
+  //   resourceShareReds:false,
+  // };
+  
+  const[boardRules, setRules] = useState({
+    defaultSize: true,
+    noRed: true,
     resourceShareReds:false,
-  };
+  })
   
   const generateBoard = ()=>{
     //logic to accompany
     //pull down UI props
-
-    setBoard(new BoardMaker(boardRules));
+    
+    let newRules = {
+      defaultSize: document.getElementById('standardGame').checked,
+      noRed: !document.getElementById('redNeighbors').checked,
+      resourceShareReds: document.getElementById('resourceClumping').checked,
+    }
+    
+    setRules(newRules)
+    
+    setBoard(new BoardMaker(newRules));
     setVisible(!visible);
     console.log('New Board: ', board);
   }
@@ -30,6 +49,8 @@ function App() {
   const boardReturn = ()=>{
     let toReturn=[];
 
+    console.log('boardRules', boardRules);
+    
     if (visible){
       toReturn.push(
           <Board board={board} standardSize={boardRules.defaultSize}/>
@@ -54,30 +75,111 @@ function App() {
   return (
     <div className={classes.base}>
       <HeaderBar/>
-      <Button className={classes.button} onClick={()=>generateBoard()}>Generate!</Button>
-      {boardReturn()}
+      
+      <div className={classes.holder}>
+        <SidebarRules onClick={()=>generateBoard()}/>
+        {boardReturn()}
+      </div>
+    </div>
+  );
+}
+
+export function SidebarRules(props){
+  const [value, setValue] = React.useState('standard');
+  
+  const handleChange = (event) => {
+    setValue(event.target.value);
+    
+  };
+  
+  const classes = useStyles();
+  return(
+    <div className={classes.rulesHolder}>
+      {/*<h2 className={classes.ruleTitle}>Rules</h2>*/}
+      <FormControl>
+        <h2 className={classes.ruleTitle}>Game Rules</h2>
+        <RadioGroup value={value} onChange={handleChange}>
+          <h4>Game Size</h4>
+          <FormControlLabel value="standard" control={<Radio id={'standardGame'} name={'standardGame'}/>}  label="Standard (2-4 players)" />
+          <FormControlLabel value="extended" control={<Radio />} label="Extended (5-6 Players)" />
+        </RadioGroup>
+        <h4>Generator Rules</h4>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox id={'redNeighbors'}/>}
+            label="Allow Red Neighbors"
+          />
+          <FormControlLabel
+            control={<Checkbox id={'resourceClumping'}/>}
+            label="Allow Reds to be on 2+ same resources"
+          />
+          <FormControlLabel
+            control={<Checkbox id={'x'}/>}
+            label="Allow 3 Same Resource Intersections"
+          />
+        </FormGroup>
+      </FormControl>
+      <Button className={classes.button} onClick={()=> props.onClick()}>Generate!</Button>
     </div>
   );
 }
 
 const useStyles = makeStyles({
+  app:{
+    display:"flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
   base:{
     background: 'radial-gradient(circle, #303030 25%,#252525 75% )',
     alignItems: "center",
     minHeight: window.innerHeight,
+    
+    display: "flex",
+    flexDirection: "column",
   },
-
+  
   button:{
     backgroundColor: '#ff3c3c',
     position: "relative",
-    left: "40%",
-    right: "40%",
-    width: '20%',
+    // marginTop: '100px',
+    // left: "40%",
+    // right: "40%",
+    // width: '20%',
     alignSelf: "center"
   },
-
+  
   board:{
     visibility : props => props.visible,
+    flex:3,
+  },
+  rulesHolder:{
+    flex: 1,
+    marginTop: '85px',
+    
+    minWidth:'20%',
+    maxHeight: '400px',
+    display: "flex",
+    flexDirection: "column",
+    
+    background: 'radial-gradient(circle, #ffffff 25%,#fcfcfc 75% )',
+    border: '3px solid #0a0a0a',
+    color: '#0a0a0a',
+    
+    textAlign:"center",
+    padding: '1em',
+  },
+  holder:{
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  ruleTitle:{
+    textAlign:"center",
+    backgroundColor:'#cc4444'
   }
 })
 
@@ -103,6 +205,8 @@ class BoardMaker{
       if (BoardRules.resourceShareReds){
         resourceTypeList.push(...oneResource);
         console.log('resourceTypeList',resourceTypeList)
+      }else{
+        resourceTypeList.push(oneResource.popRandom()[0]);
       }
 
       //randomly assign
@@ -124,23 +228,25 @@ class BoardMaker{
           
         }
 
-        //pop one randomly from the oneresource to give back to normal resources
-        if (!BoardRules.resourceShareReds){
-          resourceTypeList.push(oneResource.popRandom()[0]);
-        }
+        // //pop one randomly from the oneresource to give back to normal resources
+        // if (!BoardRules.resourceShareReds){
+        //   resourceTypeList.push(oneResource.popRandom()[0]);
+        // }
 
         //fill in the rest randomly
         // console.log('board reds', board);
-        for(let i = 0; i < spots.length;){
-          let num=spots.popRandom()[0];
-          let number = numberList.popRandom()[0];
-          board[num]={
-            id:num,
-            number:number,
-            type:number ===1 ? 5: number ===6 || number ===8? BoardRules.resourceShareReds? resourceTypeList.popRandom()[0] : oneResource.popRandom()[0] : resourceTypeList.popRandom()[0],
-          }
-          // console.log('info',board[num]);
+      }else{
+        numberList.push(...reds)
+      }
+      for(let i = 0; i < spots.length;){
+        let num=spots.popRandom()[0];
+        let number = numberList.popRandom()[0];
+        board[num]={
+          id:num,
+          number:number,
+          type:number ===1 ? 5: number ===6 || number ===8? BoardRules.resourceShareReds? resourceTypeList.popRandom()[0] : oneResource.popRandom()[0] : resourceTypeList.popRandom()[0],
         }
+        // console.log('info',board[num]);
       }
       
       return board;
