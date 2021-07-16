@@ -14,14 +14,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 
 function App() {
   
-  const [board, setBoard] = useState(null)
-  const [visible, setVisible] = useState(false);
-
-  // let boardRules={
-  //   defaultSize: true,
-  //   noRed: true,
-  //   resourceShareReds:false,
-  // };
+  const [board, setBoard] = useState(new BoardMaker({defaultSize: true, noRed: true, resourceShareReds: false}))
+  const [visible, setVisible] = useState(0);
   
   const[boardRules, setRules] = useState({
     defaultSize: true,
@@ -42,33 +36,50 @@ function App() {
     setRules(newRules)
     
     setBoard(new BoardMaker(newRules));
-    setVisible(!visible);
+    setVisible(1);
     console.log('New Board: ', board);
   }
 
   const boardReturn = ()=>{
     let toReturn=[];
 
-    console.log('boardRules', boardRules);
+    console.log('visibility', visible);
     
-    if (visible){
+    if (visible === 0){
+      let newRules = {
+        defaultSize: true,
+        noRed: true,
+        resourceShareReds: false,
+      }
+      let b = new BoardMaker(newRules)
+      console.log('b',b);
+      // setBoard(b)
       toReturn.push(
-          <Board board={board} standardSize={boardRules.defaultSize}/>
+        <Board board={b} standardSize={boardRules.defaultSize}/>
       )
-    }else{
+    }
+    else if(visible === 1){
       toReturn.push(
           <div>
             <h3>LOADING</h3>
           </div>
       )
     }
+    else {
+      toReturn.push(
+          <Board board={board} standardSize={boardRules.defaultSize}/>
+      )
+    }
+    
 
     return toReturn;
   }
   
-  // useEffect(() => {
-  //   setVisible(false);
-  // }, []);
+  useEffect(() => {
+    console.log('useffect V', visible);
+    if(visible === 1)
+      setVisible(2);
+  }, [visible]);
   
   
   const classes = useStyles({visible});
