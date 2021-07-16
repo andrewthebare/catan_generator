@@ -124,10 +124,10 @@ export function SidebarRules(props){
             control={<Checkbox id={'resourceClumping'}/>}
             label="Allow Reds to be on 2+ same resources"
           />
-          <FormControlLabel
-            control={<Checkbox id={'x'}/>}
-            label="Allow 3 Same Resource Intersections"
-          />
+          {/*<FormControlLabel*/}
+          {/*  control={<Checkbox id={'x'}/>}*/}
+          {/*  label="Allow 3 Same Resource Intersections"*/}
+          {/*/>*/}
         </FormGroup>
       </FormControl>
       <Button className={classes.button} onClick={()=> props.onClick()}>Generate!</Button>
@@ -168,7 +168,8 @@ const useStyles = makeStyles({
     flex: 1,
     marginTop: '85px',
     
-    minWidth:'20%',
+    minWidth:'300px',
+    maxWidth: window.innerWidth<500? window.innerWidth - 10 : '600px',
     maxHeight: '400px',
     display: "flex",
     flexDirection: "column",
@@ -186,6 +187,7 @@ const useStyles = makeStyles({
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
+    maxWidth: window.outerWidth,
   },
   
   ruleTitle:{

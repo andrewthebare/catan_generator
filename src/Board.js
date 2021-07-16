@@ -86,7 +86,8 @@ const useStyles = makeStyles({
   base:{
     marginTop: window.innerWidth > 800? '65px': 0,
     transform: window.innerWidth < 800? props=> props.standardSize? "scale(.5)" : 'scale(.43)' : 'scale(1)',
-    padding: window.innerWidth > 800?'2em' : 0,
+    padding: window.innerWidth > 800?'1em' : 0,
+    
   }
 })
 
