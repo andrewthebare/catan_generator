@@ -145,7 +145,7 @@ const useStyles = makeStyles({
     justifyContent:"center",
     alignItems:"center",
     
-    margin: window.innerWidth < 500?  "0 -1px": 0,
+    margin: window.innerWidth < 500?  "0 -3px": 0,
   },
   canvasHex:{
     width: props => props.width,
