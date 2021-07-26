@@ -92,7 +92,8 @@ const useStyles = makeStyles({
         height:150,
 
         overflow:"hidden",
-
+        margin: window.innerWidth < 500?  "0 -2px": 0,
+    
         display: "flex",
         justifyContent:"center",
         alignItems:"center",
