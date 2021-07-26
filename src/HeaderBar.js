@@ -6,7 +6,7 @@ export default function HeaderBar(){
     const styles = useStyles();
     return(
         <div className={styles.base}>
-            <h1>Catan Board Generator</h1>
+            <h1>Catan Map Maker</h1>
         </div>
     )
 }
