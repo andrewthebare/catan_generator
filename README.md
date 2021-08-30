@@ -2,4 +2,4 @@
 ## Todo
 
 + Algorithm Changes
--- Seperate 2 and 12
+++ Seperate 2 and 12
