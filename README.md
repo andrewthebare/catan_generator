@@ -1,4 +1,5 @@
-# catan_generator
+# Catan Generator
+[Website](https://catanmapmaker.com)
 ## Todo
 
 ### Algorithm Changes
