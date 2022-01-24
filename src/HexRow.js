@@ -8,7 +8,7 @@ export default function HexRow(props){
   
   const makeRow = ()=>{
     let result = [];
-    console.log('Row Data: ', props.hexData);
+    // console.log('Row Data: ', props.hexData);
 
     let local = 0;
     let startIndex = 0;

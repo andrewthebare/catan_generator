@@ -14,13 +14,22 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 
 function App() {
   
-  const [board, setBoard] = useState(new BoardMaker({defaultSize: true, noRed: true, resourceShareReds: false}))
+  const [board, setBoard] = useState(new BoardMaker(
+    {
+      defaultSize: true,
+      noRed: true,
+      resourceShareReds: false,
+      AllowLowNeighbor: true,
+      AllowLowSameResource: false,
+    }))
   const [visible, setVisible] = useState(0);
   
   const[boardRules, setRules] = useState({
     defaultSize: true,
     noRed: true,
-    resourceShareReds:false,
+    resourceShareReds: false,
+    AllowLowNeighbor: false,
+    AllowLowSameResource: false,
   })
   
   const generateBoard = ()=>{
@@ -31,6 +40,8 @@ function App() {
       defaultSize: document.getElementById('standardGame').checked,
       noRed: !document.getElementById('redNeighbors').checked,
       resourceShareReds: document.getElementById('resourceClumping').checked,
+      AllowLowNeighbor: document.getElementById('AllowLowNeighbor').checked,
+      AllowLowSameResource: document.getElementById('AllowLowSameResource').checked,
     }
     
     setRules(newRules)
@@ -43,7 +54,7 @@ function App() {
   const boardReturn = ()=>{
     let toReturn=[];
 
-    console.log('visibility', visible);
+    // console.log('visibility', visible);
     
     if (visible === 0){
       let newRules = {
@@ -76,7 +87,7 @@ function App() {
   }
   
   useEffect(() => {
-    console.log('useffect V', visible);
+    // console.log('useffect V', visible);
     if(visible === 1)
       setVisible(2);
   }, [visible]);
@@ -118,11 +129,19 @@ export function SidebarRules(props){
         <FormGroup>
           <FormControlLabel
             control={<Checkbox id={'redNeighbors'}/>}
-            label="Allow Red Neighbors"
+            label="Allow red number neighbors"
           />
           <FormControlLabel
             control={<Checkbox id={'resourceClumping'}/>}
-            label="Allow Reds to be on 2+ same resources"
+            label="Allow red numbers to be on 2+ same resources"
+          />
+          <FormControlLabel
+            control={<Checkbox id={'AllowLowNeighbor'}/>}
+            label="Allow 2 and 12 to border each other"
+          />
+          <FormControlLabel
+            control={<Checkbox id={'AllowLowSameResource'}/>}
+            label="Allow 2 and 12 to be on the same resource"
           />
           {/*<FormControlLabel*/}
           {/*  control={<Checkbox id={'x'}/>}*/}
@@ -207,12 +226,17 @@ class BoardMaker{
   
     function generateDefaultBoard() {
       let spots = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
-      let numberList = [2,3,3,4,4,5,5,9,9,10,10,11,11,12,1];
+      let numberList = [3,3,4,4,5,5,9,9,10,10,11,11,1];
       let reds = [6,6,8,8];
-      let oneResource=[0,1,2,3,4]
-      let resourceTypeList=[0,0,0,1,1,2,2,2,3,3,3,4,4];
+      let oneResource=[0,1,2,3,4];
+      let oneLowResource=[0,1,2,3,4];
+      let resourceTypeList=[0,0,1,2,2,3,3,4];
       let neighbors=[[1,3,4],[0,4,5,2],[1,5,6],[0,4,7,8],[0,1,3,5,8,9],[1,2,4,6,9,10],[2,5,10,11],[3,8,12],[3,4,7,9,12,13],[4,5,8,10,13,14],[5,6,9,11,14,15],[6,10,15],[7,8,13,16],[8,9,12,14,16,17],[9,10,13,15,17,18],[10,11,14,18],[12,13,17],[16,13,14,18],[14,15,17]];
       let board={};
+
+      // console.log('spots', spots)
+      // console.log('numberList', numberList)
+      // console.log('resourceTypeList', resourceTypeList)
 
       //if no reds on same resources
       if (BoardRules.resourceShareReds){
@@ -220,6 +244,15 @@ class BoardMaker{
         console.log('resourceTypeList',resourceTypeList)
       }else{
         resourceTypeList.push(oneResource.popRandom()[0]);
+      }
+      
+      if (BoardRules.AllowLowSameResource){
+        resourceTypeList.push(...oneLowResource);
+        console.table('resourceTypeList',resourceTypeList)
+      }else{
+        resourceTypeList.push(oneLowResource.popRandom()[0]);
+        resourceTypeList.push(oneLowResource.popRandom()[0]);
+        resourceTypeList.push(oneLowResource.popRandom()[0]);
       }
 
       //randomly assign
@@ -241,16 +274,46 @@ class BoardMaker{
           
         }
 
-        // //pop one randomly from the oneresource to give back to normal resources
-        // if (!BoardRules.resourceShareReds){
-        //   resourceTypeList.push(oneResource.popRandom()[0]);
-        // }
-
-        //fill in the rest randomly
-        // console.log('board reds', board);
       }else{
         numberList.push(...reds)
       }
+      
+      //no 2s and 12s
+      if (!BoardRules.AllowLowNeighbor){
+        let nums = [2,12];
+        let possible = spots;
+  
+        for(let i = 0; i < 2; i++){
+          // console.log('possible', possible);
+
+          let pos = possible.popRandom()[0];
+          board[pos] = {
+            id:pos,
+            number: nums.popRandom()[0],
+            type: BoardRules.AllowLowSameResource? resourceTypeList.popRandom()[0] : oneLowResource.popRandom()[0],
+          }
+          spots = spots.filter(function (e){
+            return e!==pos
+          })
+          possible = possible.filter(function(e){
+            return !neighbors[pos].includes(e);
+          })
+          
+        }
+
+        console.log('oneLowResource', oneLowResource)
+        console.table('resourceTypeList',resourceTypeList)
+
+
+        // //return the missing oneResource
+        // resourceTypeList.push(...oneLowResource)
+        // console.log('typeList', resourceTypeList);
+      }else{
+        numberList.push(...[2,12]);
+        resourceTypeList.push(...oneLowResource)
+      }
+
+      //rest
       for(let i = 0; i < spots.length;){
         let num=spots.popRandom()[0];
         let number = numberList.popRandom()[0];
