@@ -14,39 +14,50 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 
 function App() {
   
+  //just gotta display something to start | hardcoded cause I'm a lazy idiot
   const [board, setBoard] = useState(new BoardMaker(
     {
       defaultSize: true,
-      noRed: true,
+      redNeighbors: true,
       resourceShareReds: false,
       AllowLowNeighbor: true,
       AllowLowSameResource: false,
     }))
   const [visible, setVisible] = useState(0);
   
+  //This is actually the first state
   const[boardRules, setRules] = useState({
     defaultSize: true,
-    noRed: true,
+    redNeighbors: true,
     resourceShareReds: false,
     AllowLowNeighbor: false,
     AllowLowSameResource: false,
   })
+
+  const handleRuleChange=(key)=>{
+    console.log('key', key);
+
+    let tempRules = boardRules;
+    tempRules[key] = !tempRules[key]
+    console.log('tempRules', tempRules);
+    setRules(tempRules);
+  }
   
   const generateBoard = ()=>{
     //logic to accompany
     //pull down UI props
     
-    let newRules = {
-      defaultSize: document.getElementById('standardGame').checked,
-      noRed: !document.getElementById('redNeighbors').checked,
-      resourceShareReds: document.getElementById('resourceClumping').checked,
-      AllowLowNeighbor: document.getElementById('AllowLowNeighbor').checked,
-      AllowLowSameResource: document.getElementById('AllowLowSameResource').checked,
-    }
+    // let newRules = {
+    //   defaultSize: document.getElementById('standardGame').checked,
+    //   redNeighbors: !document.getElementById('redNeighbors').checked,
+    //   resourceShareReds: document.getElementById('resourceShareReds').checked,
+    //   AllowLowNeighbor: document.getElementById('AllowLowNeighbor').checked || false,
+    //   AllowLowSameResource: document.getElementById('AllowLowSameResource').checked || false,
+    // }
     
-    setRules(newRules)
+    // setRules(newRules)
     
-    setBoard(new BoardMaker(newRules));
+    setBoard(new BoardMaker(boardRules));
     setVisible(1);
     console.log('New Board: ', board);
   }
@@ -59,7 +70,7 @@ function App() {
     if (visible === 0){
       let newRules = {
         defaultSize: true,
-        noRed: true,
+        redNeighbors: true,
         resourceShareReds: false,
       }
       let b = new BoardMaker(newRules)
@@ -99,7 +110,7 @@ function App() {
       <HeaderBar/>
       
       <div className={classes.holder}>
-        <SidebarRules onClick={()=>generateBoard()}/>
+        <SidebarRules onClick={()=>generateBoard()} changeRule={handleRuleChange}/>
         {boardReturn()}
       </div>
     </div>
@@ -111,8 +122,33 @@ export function SidebarRules(props){
   
   const handleChange = (event) => {
     setValue(event.target.value);
+    props.changeRule('defaultSize');
     
   };
+
+  const handleCheckBoxChange = event=>{
+    // console.log('event.target', event.target);
+    props.changeRule(event.target.id);
+  }
+
+  const showStandardRules =()=>{
+    let show= [];
+
+    if(value === 'standard'){
+      show.push(
+        <FormControlLabel
+          control={<Checkbox id={'AllowLowNeighbor'} onChange={handleCheckBoxChange}/>}
+          label="Allow 2 and 12 to border each other"
+          />);
+          show.push(
+        <FormControlLabel
+          control={<Checkbox id={'AllowLowSameResource'} onChange={handleCheckBoxChange}/>}
+          label="Allow 2 and 12 to be on the same resource"
+          />);
+    }
+
+    return show;
+  }
   
   const classes = useStyles();
   return(
@@ -128,21 +164,16 @@ export function SidebarRules(props){
         <h4>Generator Rules</h4>
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox id={'redNeighbors'}/>}
+            control={<Checkbox id={'redNeighbors'} onChange={handleCheckBoxChange}/>}
             label="Allow red number neighbors"
           />
           <FormControlLabel
-            control={<Checkbox id={'resourceClumping'}/>}
-            label="Allow red numbers to be on 2+ same resources"
+            control={<Checkbox id={'resourceShareReds'} onChange={handleCheckBoxChange}/>}
+            label="Allow red numbers to be on 2 or more of the same resources"
           />
-          <FormControlLabel
-            control={<Checkbox id={'AllowLowNeighbor'}/>}
-            label="Allow 2 and 12 to border each other"
-          />
-          <FormControlLabel
-            control={<Checkbox id={'AllowLowSameResource'}/>}
-            label="Allow 2 and 12 to be on the same resource"
-          />
+
+          {showStandardRules()}
+
           {/*<FormControlLabel*/}
           {/*  control={<Checkbox id={'x'}/>}*/}
           {/*  label="Allow 3 Same Resource Intersections"*/}
@@ -256,7 +287,7 @@ class BoardMaker{
       }
 
       //randomly assign
-      if (BoardRules.noRed){
+      if (BoardRules.redNeighbors){
         let possible = spots;
         for(let i = 0; i < 4; i++){
           let pos = possible.popRandom()[0];
@@ -345,7 +376,7 @@ class BoardMaker{
       }
 
       //place the reds first
-      if (BoardRules.noRed){
+      if (BoardRules.redNeighbors){
         let possible = spots;
         for(let i = 0; i < 6; i++){
           let pos = possible.popRandom()[0];
@@ -383,7 +414,10 @@ class BoardMaker{
 
   }
 }
-//borrowed
+/**
+ * 
+ * @returns a random element of the array
+ */
 Array.prototype.popRandom = function () {
   return this.splice(Math.floor(Math.random() * this.length), 1);
 }
