@@ -7,6 +7,8 @@
 - :heavy_check_mark: Toggle allowing 2 and 12 to be on the same resource
 - :black_square_button: Allow user to set number of max pips so as to allow/dissallow 5-6-9 type spots
 - :black_square_button: Allow/Disallow Resource clumping
-
+- :black_square_button: Special rules for Desert placement
+  - no coast
+  - no desert neighbor
 ### Board Generation
 + Random Port allocation
