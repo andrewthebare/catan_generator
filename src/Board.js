@@ -8,7 +8,6 @@ export default function Board(props){
   
   const makeRows= (hexnum)=>{
     //turn the board into rows
-    console.log('props.board',props.board)
     let board = props.board.board;
     console.log('Board given to BoardClass', board);
     let rows={};

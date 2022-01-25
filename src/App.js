@@ -59,7 +59,7 @@ function App() {
     
     setBoard(new BoardMaker(boardRules));
     setVisible(1);
-    console.log('New Board: ', board);
+    // console.log('New Board: ', board);
   }
 
   const boardReturn = ()=>{
@@ -135,11 +135,6 @@ export function SidebarRules(props){
     let show= [];
 
     if(value === 'standard'){
-      show.push(
-        <FormControlLabel
-          control={<Checkbox id={'AllowLowNeighbor'} onChange={handleCheckBoxChange}/>}
-          label="Allow 2 and 12 to border each other"
-          />);
           show.push(
         <FormControlLabel
           control={<Checkbox id={'AllowLowSameResource'} onChange={handleCheckBoxChange}/>}
@@ -169,7 +164,11 @@ export function SidebarRules(props){
           />
           <FormControlLabel
             control={<Checkbox id={'resourceShareReds'} onChange={handleCheckBoxChange}/>}
-            label="Allow red numbers to be on 2 or more of the same resources"
+            label={`${value==='standard'?'Allow red numbers to be on 2 or more of the same resources':'Allow more than one resource to have multiple red numbers'}`}
+          />
+          <FormControlLabel
+          control={<Checkbox id={'AllowLowNeighbor'} onChange={handleCheckBoxChange}/>}
+          label="Allow 2 and 12 to border each other"
           />
 
           {showStandardRules()}
@@ -310,11 +309,11 @@ class BoardMaker{
       }
       
       //no 2s and 12s
+      let nums = [2,12];
       if (!BoardRules.AllowLowNeighbor){
-        let nums = [2,12];
         let possible = spots;
   
-        for(let i = 0; i < 2; i++){
+        for(let i = 0; i <= nums.length; i++){
           // console.log('possible', possible);
 
           let pos = possible.popRandom()[0];
@@ -340,7 +339,7 @@ class BoardMaker{
         // resourceTypeList.push(...oneLowResource)
         // console.log('typeList', resourceTypeList);
       }else{
-        numberList.push(...[2,12]);
+        numberList.push(...nums);
         resourceTypeList.push(...oneLowResource)
       }
 
@@ -361,7 +360,7 @@ class BoardMaker{
     }
     function generateExtendedBoard() {
       let spots = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
-      let numberList = [2,2,3,3,3,4,4,4,5,5,5,9,9,9,10,10,10,11,11,11,12,12,1,1];
+      let numberList = [3,3,3,4,4,4,5,5,5,9,9,9,10,10,10,11,11,11,1,1];
       let reds = [6,6,8,8,6,8];
       let oneResource=[0,1,2,3,4]
       let resourceTypeList=[0,0,0,0,0,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4];
@@ -371,7 +370,7 @@ class BoardMaker{
       //if no reds on same resources
       if (BoardRules.resourceShareReds){
         resourceTypeList.push(...oneResource);
-      }else{
+      }else{  //add one more to oneResource
         oneResource.push(resourceTypeList.popRandom()[0])
       }
 
@@ -396,6 +395,40 @@ class BoardMaker{
       }else{
         numberList.push(...reds)
       }
+
+      //no 2 and 12 neighbors
+      let nums = [2,12,2,12];
+      if (!BoardRules.AllowLowNeighbor){
+        let possible = spots;
+  
+        for(let i = 0; i < 4; i++){
+          console.log(i, possible);
+
+          let pos = possible.popRandom()[0];
+          board[pos] = {
+            id:pos,
+            number: nums.popRandom()[0],
+            type: resourceTypeList.popRandom()[0],
+          }
+          spots = spots.filter(function (e){
+            return e!==pos
+          })
+          possible = possible.filter(function(e){
+            return !neighbors[pos].includes(e);
+          })
+          
+        }
+
+        console.table('I Made it to the end!',resourceTypeList)
+
+
+        // //return the missing oneResource
+        // resourceTypeList.push(...oneLowResource)
+        // console.log('typeList', resourceTypeList);
+      }else{
+        numberList.push(...nums);
+      }
+
 
         //fill in the rest randomly
         // console.log('board reds', board);
