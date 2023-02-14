@@ -34,11 +34,8 @@ function App() {
   });
 
   const handleRuleChange = (key) => {
-    console.log("key", key);
-
     let tempRules = boardRules;
     tempRules[key] = !tempRules[key];
-    console.log("tempRules", tempRules);
     setRules(tempRules);
   };
 
@@ -58,13 +55,10 @@ function App() {
 
     setBoard(new BoardMaker(boardRules));
     setVisible(1);
-    // console.log('New Board: ', board);
   };
 
   const boardReturn = () => {
     let toReturn = [];
-
-    // console.log('visibility', visible);
 
     if (visible === 0) {
       let newRules = {
@@ -73,18 +67,23 @@ function App() {
         resourceShareReds: false,
       };
       let b = new BoardMaker(newRules);
-      console.log("b", b);
       // setBoard(b)
-      toReturn.push(<Board board={b} standardSize={boardRules.defaultSize} />);
+      toReturn.push(
+        <Board key={b} board={b} standardSize={boardRules.defaultSize} />
+      );
     } else if (visible === 1) {
       toReturn.push(
-        <div>
+        <div key={-1}>
           <h3>LOADING</h3>
         </div>
       );
     } else {
       toReturn.push(
-        <Board board={board} standardSize={boardRules.defaultSize} />
+        <Board
+          key={board}
+          board={board}
+          standardSize={boardRules.defaultSize}
+        />
       );
     }
 
@@ -92,7 +91,6 @@ function App() {
   };
 
   useEffect(() => {
-    // console.log('useffect V', visible);
     if (visible === 1) setVisible(2);
   }, [visible]);
 
@@ -121,7 +119,6 @@ export function SidebarRules(props) {
   };
 
   const handleCheckBoxChange = (event) => {
-    // console.log('event.target', event.target);
     props.changeRule(event.target.id);
   };
 
@@ -131,6 +128,7 @@ export function SidebarRules(props) {
     if (value === "standard") {
       show.push(
         <FormControlLabel
+          key={0}
           control={
             <Checkbox
               id={"AllowLowSameResource"}
@@ -330,14 +328,9 @@ class BoardMaker {
       ];
       let board = {};
 
-      // console.log('spots', spots)
-      // console.log('numberList', numberList)
-      // console.log('resourceTypeList', resourceTypeList)
-
       //if no reds on same resources
       if (BoardRules.resourceShareReds) {
         resourceTypeList.push(...oneResource);
-        console.log("resourceTypeList", resourceTypeList);
       } else {
         resourceTypeList.push(oneResource.popRandom()[0]);
       }
@@ -380,8 +373,6 @@ class BoardMaker {
         let possible = spots;
 
         for (let i = 0; i <= nums.length; i++) {
-          // console.log('possible', possible);
-
           let pos = possible.popRandom()[0];
           board[pos] = {
             id: pos,
@@ -398,12 +389,8 @@ class BoardMaker {
           });
         }
 
-        console.log("oneLowResource", oneLowResource);
-        console.table("resourceTypeList", resourceTypeList);
-
         // //return the missing oneResource
         // resourceTypeList.push(...oneLowResource)
-        // console.log('typeList', resourceTypeList);
       } else {
         numberList.push(...nums);
         resourceTypeList.push(...oneLowResource);
@@ -425,7 +412,6 @@ class BoardMaker {
                 : oneResource.popRandom()[0]
               : resourceTypeList.popRandom()[0],
         };
-        // console.log('info',board[num]);
       }
 
       return board;
@@ -514,8 +500,6 @@ class BoardMaker {
         let possible = spots;
 
         for (let i = 0; i < 4; i++) {
-          console.log(i, possible);
-
           let pos = possible.popRandom()[0];
           board[pos] = {
             id: pos,
@@ -534,13 +518,11 @@ class BoardMaker {
 
         // //return the missing oneResource
         // resourceTypeList.push(...oneLowResource)
-        // console.log('typeList', resourceTypeList);
       } else {
         numberList.push(...nums);
       }
 
       //fill in the rest randomly
-      // console.log('board reds', board);
       for (let i = 0; i < spots.length; ) {
         let num = spots.popRandom()[0];
         let number = numberList.popRandom()[0];
