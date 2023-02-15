@@ -5,6 +5,11 @@ import HexRow, { SeaRow } from "./HexRow";
 import SeaEdge from "./SeaEdge";
 
 export default function Board(props) {
+  useEffect(() => {
+    const boardElement = document.getElementById("board");
+    if (boardElement) boardElement.scrollIntoView();
+  }, []);
+
   const makeRows = (hexnum) => {
     //turn the board into rows
     let board = props.board.board;
@@ -39,7 +44,7 @@ export default function Board(props) {
     let rows = makeRows(19);
 
     return (
-      <div className={styles.base}>
+      <div id='board' className={styles.base}>
         <SeaRow hexIndex={-1} startIndex={0} endIndex={4} top={true} />
         <HexRow
           hexNum={3}
@@ -90,7 +95,7 @@ export default function Board(props) {
     let rows = makeRows(30);
 
     return (
-      <div className={styles.base}>
+      <div id='board' className={styles.base}>
         <SeaRow hexIndex={-1} startIndex={0} endIndex={4} top={true} />
         <HexRow
           hexNum={3}

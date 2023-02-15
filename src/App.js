@@ -261,8 +261,8 @@ const useStyles = makeStyles({
     marginTop: "85px",
 
     minWidth: "300px",
-    maxWidth: window.innerWidth < 500 ? window.innerWidth - 10 : "600px",
-    maxHeight: "500px",
+    maxWidth: window.innerWidth < 500 ? "85%" : "600px",
+    // maxHeight: "500px",
     display: "flex",
     flexDirection: "column",
 
@@ -270,8 +270,8 @@ const useStyles = makeStyles({
     border: "3px solid #0a0a0a",
     color: "#0a0a0a",
 
-    textAlign: "center",
-    padding: "1em",
+    textAlign: "left",
+    padding: "0.5em",
   },
   holder: {
     display: "flex",
@@ -337,7 +337,6 @@ class BoardMaker {
 
       if (BoardRules.AllowLowSameResource) {
         resourceTypeList.push(...oneLowResource);
-        console.table("resourceTypeList", resourceTypeList);
       } else {
         resourceTypeList.push(oneLowResource.popRandom()[0]);
         resourceTypeList.push(oneLowResource.popRandom()[0]);
@@ -513,8 +512,6 @@ class BoardMaker {
             return !neighbors[pos].includes(e);
           });
         }
-
-        console.table("I Made it to the end!", resourceTypeList);
 
         // //return the missing oneResource
         // resourceTypeList.push(...oneLowResource)
