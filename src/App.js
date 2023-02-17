@@ -17,9 +17,10 @@ function App() {
     new BoardMaker({
       defaultSize: true,
       redNeighbors: true,
-      resourceShareReds: false,
+      resourceShareReds: true,
       AllowLowNeighbor: true,
       AllowLowSameResource: false,
+      DesertInCenter: true,
     })
   );
   const [visible, setVisible] = useState(0);
@@ -28,9 +29,10 @@ function App() {
   const [boardRules, setRules] = useState({
     defaultSize: true,
     redNeighbors: true,
-    resourceShareReds: false,
+    resourceShareReds: true,
     AllowLowNeighbor: false,
     AllowLowSameResource: false,
+    DesertInCenter: true,
   });
 
   const handleRuleChange = (key) => {
@@ -149,9 +151,9 @@ export function SidebarRules(props) {
       <div style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
         <h3 className={classes.ruleTitle}>Instructions</h3>
         <p style={{ textAlign: "left" }}>
-          Use this flexible catan board generator to make unique standard and
-          5-6 player boards according to a set of chosen parameters. To create
-          the most "balanced" board, untick every box.
+          Use this flexible catan board generator to make randomized standard
+          and 5-6 player boards according to a set of chosen parameters. To
+          create the most "balanced" board, untick every box.
         </p>
         <p style={{ textAlign: "center", paddingTop: ".5rem" }}>
           Created by:{" "}
@@ -192,6 +194,7 @@ export function SidebarRules(props) {
           <FormControlLabel
             control={
               <Checkbox
+                defaultChecked={true}
                 id={"resourceShareReds"}
                 onChange={handleCheckBoxChange}
               />
@@ -201,6 +204,16 @@ export function SidebarRules(props) {
                 ? "Allow red numbers to be on 2 or more of the same resources"
                 : "Allow more than one resource to have multiple red numbers"
             }`}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                defaultChecked={true}
+                id={"DesertInCenter"}
+                onChange={handleCheckBoxChange}
+              />
+            }
+            label='Force desert to be a center tile'
           />
           <FormControlLabel
             control={
@@ -300,7 +313,7 @@ class BoardMaker {
       let spots = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
       ];
-      let numberList = [3, 3, 4, 4, 5, 5, 9, 9, 10, 10, 11, 11, 1];
+      let numberList = [3, 3, 4, 4, 5, 5, 9, 9, 10, 10, 11, 11];
       let reds = [6, 6, 8, 8];
       let oneResource = [0, 1, 2, 3, 4];
       let oneLowResource = [0, 1, 2, 3, 4];
@@ -327,6 +340,29 @@ class BoardMaker {
         [14, 15, 17],
       ];
       let board = {};
+
+      //place the desert
+      if (BoardRules.DesertInCenter) {
+        let placed = false;
+        do {
+          const spot = Math.floor(Math.random() * neighbors.length);
+          if (neighbors[spot].length > 4) {
+            placed = true;
+            let pos = spots[spot];
+            spots = spots.filter(function (e) {
+              return e !== pos;
+            });
+
+            board[pos] = {
+              id: pos,
+              number: 1,
+              type: 5,
+            };
+          }
+        } while (!placed);
+      } else {
+        numberList.push(1);
+      }
 
       //if no reds on same resources
       if (BoardRules.resourceShareReds) {
@@ -421,7 +457,7 @@ class BoardMaker {
         20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
       ];
       let numberList = [
-        3, 3, 3, 4, 4, 4, 5, 5, 5, 9, 9, 9, 10, 10, 10, 11, 11, 11, 1, 1,
+        3, 3, 3, 4, 4, 4, 5, 5, 5, 9, 9, 9, 10, 10, 10, 11, 11, 11,
       ];
       let reds = [6, 6, 8, 8, 6, 8];
       let oneResource = [0, 1, 2, 3, 4];
@@ -461,6 +497,34 @@ class BoardMaker {
         [25, 26, 28],
       ];
       let board = {};
+
+      //place the desert
+      if (BoardRules.DesertInCenter) {
+        for (let i = 0; i < 2; i++) {
+          let placed = false;
+          do {
+            const spot = Math.floor(Math.random() * spots.length);
+            const pos = spots[spot];
+            const neighborCount = neighbors.filter((n) =>
+              n.includes(pos)
+            ).length;
+            if (neighborCount > 4) {
+              placed = true;
+              spots = spots.filter(function (e) {
+                return e !== pos;
+              });
+
+              board[pos] = {
+                id: pos,
+                number: 1,
+                type: 5,
+              };
+            }
+          } while (!placed);
+        }
+      } else {
+        numberList.push(...[1, 1]);
+      }
 
       //if no reds on same resources
       if (BoardRules.resourceShareReds) {
